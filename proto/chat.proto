@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package grpc;
+
+message TimeStamp{
+    int64 seconds = 1;
+}
+
+message ConnectRequest{
+    string client_id = 1;
+}
+
+message Message{
+    string sender_id = 1;
+    string message = 2;
+    TimeStamp timestamp = 3;
+}
+
+message SendMessageRequest {
+    string receiver_id = 1;
+    Message message = 2;
+}
+
+message Empty {}
+
+service ChatServer {
+    rpc ChatStream (ConnectRequest) returns (stream Message);
+    rpc SendMessage (SendMessageRequest) returns (Empty);
+}
