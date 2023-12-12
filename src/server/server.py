@@ -39,7 +39,6 @@ class Server(rpc.ChatServicer):
 
     def SendMessage(self, request: chat.Message, context) -> chat.Empty:
         logging.info(f"User {request.senderID} has sent a messagw: {request.message}")
-        message = request.message
         self.connection.add_to_chat(request)
         return chat.Empty()
 
