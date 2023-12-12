@@ -1,3 +1,6 @@
 .vscode
 __pycache__
 tests
+
+# Generated proto files
+*pb2*.py
