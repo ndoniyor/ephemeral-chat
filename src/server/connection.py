@@ -33,6 +33,6 @@ class Connection:
                 self.user1 = None
             elif self.user2 == user:
                 self.user2 = None
-            return False
-        except Exception:
             return True
+        except Exception:
+            return False
