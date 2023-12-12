@@ -38,13 +38,11 @@ class Server(rpc.ChatServicer):
         return chat.ChatUserConnected(isConnected=not status)
 
     def SendMessage(self, request: chat.Message, context) -> chat.Empty:
-        logging.info(f"User {request.senderID} has sent a message")
+        logging.info(f"User {request.senderID} has sent a messagw: {request.message}")
         message = request.message
         self.connection.add_to_chat(request)
-        print(message)
         return chat.Empty()
 
-    # rpc SubscribeMessages(stream Message) returns (stream Message)
     def SubscribeMessages(
         self, request: chat.ChatUser, context
     ) -> Generator[chat.Message]:
