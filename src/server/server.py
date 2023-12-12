@@ -45,7 +45,9 @@ class Server(rpc.ChatServicer):
         return chat.Empty()
 
     # rpc SubscribeMessages(stream Message) returns (stream Message)
-    def SubscribeMessages(self, request: chat.ChatUser, context) -> Generator[chat.Message]:
+    def SubscribeMessages(
+        self, request: chat.ChatUser, context
+    ) -> Generator[chat.Message]:
         client_id = request.username
         last_seen_message_index = 0
 
