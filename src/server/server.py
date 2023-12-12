@@ -14,15 +14,6 @@ ADDRESS = "localhost"
 PORT = 11912
 
 
-def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    rpc.add_ChatServicer_to_server(Server(), server)
-    server.add_insecure_port(f"[::]:{PORT}")
-    server.start()
-    print("Listening")
-    server.wait_for_termination()
-
-
 class Server(rpc.ChatServicer):
     def __init__(self):
         self.connections = defaultdict(Connection)
@@ -55,6 +46,15 @@ class Server(rpc.ChatServicer):
                 last_seen_message_index += 1
                 if message.senderID != client_id:
                     yield message
+
+
+def serve():
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    rpc.add_ChatServicer_to_server(Server(), server)
+    server.add_insecure_port(f"[::]:{PORT}")
+    server.start()
+    print("Listening")
+    server.wait_for_termination()
 
 
 if __name__ == "__main__":
