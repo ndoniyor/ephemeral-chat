@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package grpc;
+
+service Chat{
+    rpc Connect(ChatUser) returns (ChatUserConnected);
+    rpc Disconnect(ChatUser) returns (ChatUserConnected);
+    rpc SendMessage(Message) returns (Empty);
+    rpc SubscribeMessages(ChatUser) returns (stream Message);
+}
+
+message TimeStamp{
+    int64 seconds = 1;
+}
+
+message Message{
+    string senderID = 1;
+    string message = 2;
+    TimeStamp timestamp = 3;
+}
+
+message Empty {}
+
+message ChatUserConnected{
+    bool isConnected = 1;
+}
+
+message ChatUser{
+    string username = 1;
+}
