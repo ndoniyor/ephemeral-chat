@@ -4,3 +4,4 @@ tests
 
 # Generated proto files
 *pb2*.py
+scripts/
