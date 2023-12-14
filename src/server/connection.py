@@ -1,7 +1,7 @@
-import proto.chat_pb2 as chat
-import proto.chat_pb2_grpc as rpc
+import server.proto.chat_pb2 as chat
+import server.proto.chat_pb2_grpc as rpc
 
-from user import User
+from server.user import User
 
 
 class Connection:

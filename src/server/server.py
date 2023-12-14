@@ -4,14 +4,9 @@ from typing import Generator
 import logging
 
 import grpc
-import proto.chat_pb2 as chat
-import proto.chat_pb2_grpc as rpc
-
-from connection import Connection
-from src.utils.helpers import log_args
-
-ADDRESS = "localhost"
-PORT = 11912
+import server.proto.chat_pb2 as chat
+import server.proto.chat_pb2_grpc as rpc
+from server.connection import Connection
 
 
 class Server(rpc.ChatServicer):
@@ -29,13 +24,13 @@ class Server(rpc.ChatServicer):
         return chat.ChatUserConnected(isConnected=not status)
 
     def SendMessage(self, request: chat.Message, context) -> chat.Empty:
-        logging.info(f"User {request.senderID} has sent a messagw: {request.message}")
+        logging.info(f"User {request.senderID} has sent a message: {request.message}")
         self.connection.add_to_chat(request)
         return chat.Empty()
 
     def SubscribeMessages(
         self, request: chat.ChatUser, context
-    ) -> Generator[chat.Message]:
+    ):
         client_id = request.username
         last_seen_message_index = 0
 
@@ -46,17 +41,3 @@ class Server(rpc.ChatServicer):
                 last_seen_message_index += 1
                 if message.senderID != client_id:
                     yield message
-
-
-def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    rpc.add_ChatServicer_to_server(Server(), server)
-    server.add_insecure_port(f"[::]:{PORT}")
-    server.start()
-    print("Listening")
-    server.wait_for_termination()
-
-
-if __name__ == "__main__":
-    logging.basicConfig()
-    serve()
