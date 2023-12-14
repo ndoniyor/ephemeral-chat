@@ -23,6 +23,7 @@ message Empty {}
 
 message ChatUserConnected{
     bool isConnected = 1;
+    string conversationID = 2;
 }
 
 message ChatUser{
