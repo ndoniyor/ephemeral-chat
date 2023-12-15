@@ -12,21 +12,29 @@ class MemoryConnectionManager(ConnectionManager):
     # TODO: Directly add connection to available connections list
     def __init__(self):
         self.connections = {}
+        self.available_connections = []
 
     def _create_connection(self, user: ChatUser) -> str:
         connection = Connection()
         connection.add_user(user)
         id = str(uuid4())
+        self.available_connections.append(id)
         self.connections[id] = connection
         return id
 
-    # TODO: Maintain list of available connections to reduce time complexity of search
     def get_or_create_available_connection(self, user: ChatUser) -> str | None:
-        for id in self.connections.keys():
-            connection = self.connections[id]
-            if len(connection.users) < 2:
-                connection.add_user(user)
-                return id
+        if len(self.available_connections) > 0:
+            # TODO: Modify this so that conversations waiting the longest are prioritized
+            '''
+            So issue right now is I can either add conversations with O(1) with append, 
+            and then remove with pop(0) which is O(n)
+            
+            Or I can add conversations with O(n) with insert(0)
+            and then remove with pop(-1) which is O(1)
+            
+            Could also look into queues
+            '''
+            return self.available_connections.pop()
         try:
             return self._create_connection(user)
         except TooManyUsersError:
