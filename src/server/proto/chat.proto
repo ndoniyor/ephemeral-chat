@@ -29,4 +29,5 @@ message ChatUserConnected{
 
 message ChatUser{
     string username = 1;
+    string conversationID = 2;
 }
