@@ -18,11 +18,11 @@ logging.basicConfig()
 
 class Server(ChatServicer):
     def __init__(self):
-        self.connections = {}
+        self.connections = MemoryConnectionManager()
 
     def Connect(self, request: ChatUser, context) -> ChatUserConnected:
         user = request
-        id = MemoryConnectionManager._get_or_create_available_connection(user)
+        id = self.connections.get_or_create_available_connection(user)
         status = id is not None
         return ChatUserConnected(isConnected=status, conversationID=id)
 
@@ -33,7 +33,7 @@ class Server(ChatServicer):
     def SendMessage(self, request: Message, context) -> Empty:
         logging.info(f"User {request.senderID} has sent a message: {request.message}")
         try:
-            connection = MemoryConnectionManager._get_connection_by_client_id(
+            connection = self.connections.get_connection_by_client_id(
                 request.senderID, request.conversationID
             )
             connection.add_to_chat(request)
@@ -47,7 +47,7 @@ class Server(ChatServicer):
         last_seen_message_index = 0
 
         logging.info(f"User {client_id} has subscribed to messages")
-        connection = MemoryConnectionManager._get_connection_by_client_id(
+        connection = self.connections.get_connection_by_client_id(
             client_id, conversation_id
         )
         while True:
