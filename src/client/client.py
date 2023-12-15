@@ -1,5 +1,4 @@
 import logging
-import threading
 import grpc
 
 import server.proto.chat_pb2 as chat
