@@ -10,24 +10,24 @@ class Client(rpc.ChatStub):
     def __init__(
         self,
         username: str,
-        conversation_id: str | None = None,
+        conversation_id: str = "",
         address: str = "localhost",
         port: int = 11912,
     ):
         self.user = chat.ChatUser()
         self.user.username = username
+        self.user.conversationID = conversation_id
         channel = grpc.insecure_channel(
             f"{address}:{port}", options=(("grpc.enable_http_proxy", 0),)
         )
         self.stub = rpc.ChatStub(channel)
-        self.conversation_id = conversation_id
 
     def send_message(self):
         text_message = input(f"S[{self.user.username}]: ")
         message = chat.Message()
         message.senderID = self.user.username
         message.message = text_message
-        message.conversationID = self.conversation_id
+        message.conversationID = self.user.conversationID
         self.stub.SendMessage(message)
 
     def receive_messages(self):
@@ -37,15 +37,12 @@ class Client(rpc.ChatStub):
                 f"\nR[{res.senderID}]: {res.message}\nS[{self.user.username}]: ", end=""
             )
 
-    def setup_cli(self):
-        threading.Thread(target=self.receive_messages).start()
-        while True:
-            self.send_message()
-
     def connect_to_server(self):
+        logging.info("Connecting to server...")
         response = self.stub.Connect(self.user)
         if response.isConnected:
-            self.conversation_id = response.conversationID
+            logging.info(f"Connected to conversation {response.conversationID}")
+            self.user.conversationID = response.conversationID
         return response.isConnected
 
     def disconnect_from_server(self):
