@@ -2,21 +2,23 @@
 
 This is a simple chat server implemented in Python using gRPC. Functionality will be extended periodically. My end goal for this is a service that:
 
-- Allows two users to talk to each other
+- Allows users to talk to each other
 - Encrypted via TLS
-- Conversations can be cached for a limited time or completely ephemeral, deleting after both users disconnect
+- Conversations can be cached for a limited time or completely ephemeral--deleting after both users disconnect
 
 ## Features
 
 - Connect and disconnect users
 - Send and receive messages in real-time
+- Supports multiple separate conversations
 
 ## To-Do
 
-- [ ] Allow for multiple connections and keep them all separate (_in-progress_)
+- [x] Allow for multiple connections and keep them all separate
+- [ ] Add option to set user limit for chat rooms
+- [ ] Figure out storage for conversations (keep them non-persistent)
 - [ ] Serve gRPC server via Django
 - [ ] Add encryption to protect messages as they're transported
-- [ ] Add cache DB to allow users to persist conversations for set time
 
 ## Dependencies
 
@@ -47,7 +49,7 @@ This is a simple chat server implemented in Python using gRPC. Functionality wil
 4. Run the server:
 
     ```sh
-    python src/server/server.py
+    python src/serve.py
     ```
 
     The server will start listening for connections on `localhost:11912`.
@@ -55,7 +57,7 @@ This is a simple chat server implemented in Python using gRPC. Functionality wil
 5. Run the client(s):
 
     ```sh
-    python src/client/client.py
+    python src/connect.py
     ```
 
 ## API
