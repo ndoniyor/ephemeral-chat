@@ -1,10 +1,5 @@
-from concurrent import futures
-from collections import defaultdict
-from typing import Generator, Tuple
 import logging
-from uuid import uuid4
 
-import grpc
 import server.proto.chat_pb2 as chat
 from server.proto.chat_pb2 import (
     ChatUser,
@@ -15,10 +10,7 @@ from server.proto.chat_pb2 import (
 from server.proto.chat_pb2_grpc import ChatServicer
 from errors.errors import (
     ConversationNotFoundError,
-    TooManyUsersError,
-    UserNotFoundError,
 )
-from server.connection import Connection
 from connections.memory_manager import MemoryConnectionManager
 
 logging.basicConfig()
