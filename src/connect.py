@@ -13,4 +13,5 @@ if __name__ == "__main__":
     c = Client(username)
     if not c.connect_to_server():
         raise Exception
+    logging.info("Client has connected to server")
     c.setup_cli()
