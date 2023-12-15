@@ -1,10 +1,8 @@
 import logging
 import grpc
 
-import server.proto.chat_pb2 as chat
+from server.proto.chat_pb2 import Empty, Message, ChatUser
 import server.proto.chat_pb2_grpc as rpc
-
-logging.basicConfig()
 
 
 class Client(rpc.ChatStub):
@@ -15,7 +13,7 @@ class Client(rpc.ChatStub):
         address: str = "localhost",
         port: int = 11912,
     ):
-        self.user = chat.ChatUser()
+        self.user = ChatUser()
         self.user.username = username
         self.user.conversationID = conversation_id
         channel = grpc.insecure_channel(
@@ -23,13 +21,16 @@ class Client(rpc.ChatStub):
         )
         self.stub = rpc.ChatStub(channel)
 
-    def send_message(self):
-        text_message = input(f"S[{self.user.username}]: ")
-        message = chat.Message()
-        message.senderID = self.user.username
-        message.message = text_message
-        message.conversationID = self.user.conversationID
-        self.stub.SendMessage(message)
+    def send_message(self) -> Empty | bool:
+        try:
+            text_message = input(f"S[{self.user.username}]: ")
+            message = Message()
+            message.senderID = self.user.username
+            message.message = text_message
+            message.conversationID = self.user.conversationID
+            self.stub.SendMessage(message)
+        except KeyboardInterrupt:
+            return self.disconnect_from_server()
 
     def receive_messages(self):
         response = self.subscribe_messages()
