@@ -1,4 +1,4 @@
-class ConversationManager:
+class ConnectionManager:
     def get_conversation(self, conversation_id):
         raise NotImplementedError
 
