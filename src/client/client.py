@@ -5,13 +5,12 @@ import grpc
 import server.proto.chat_pb2 as chat
 import server.proto.chat_pb2_grpc as rpc
 
-from server.user import User
-
 
 class Client(rpc.ChatStub):
     def __init__(
         self,
         username: str,
+        conversation_id: str | None = None,
         address: str = "localhost",
         port: int = 11912,
     ):
@@ -21,12 +20,14 @@ class Client(rpc.ChatStub):
             f"{address}:{port}", options=(("grpc.enable_http_proxy", 0),)
         )
         self.stub = rpc.ChatStub(channel)
+        self.conversation_id = conversation_id
 
     def send_message(self):
         text_message = input(f"S[{self.user.username}]: ")
         message = chat.Message()
         message.senderID = self.user.username
         message.message = text_message
+        message.conversationID = self.conversation_id
         self.stub.SendMessage(message)
 
     def receive_messages(self):
@@ -43,6 +44,8 @@ class Client(rpc.ChatStub):
 
     def connect_to_server(self):
         response = self.stub.Connect(self.user)
+        if response.isConnected:
+            self.conversation_id = response.conversationID
         return response.isConnected
 
     def disconnect_from_server(self):
