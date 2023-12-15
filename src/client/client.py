@@ -5,6 +5,8 @@ import grpc
 import server.proto.chat_pb2 as chat
 import server.proto.chat_pb2_grpc as rpc
 
+logging.basicConfig()
+
 
 class Client(rpc.ChatStub):
     def __init__(
