@@ -3,8 +3,8 @@ syntax = "proto3";
 package grpc;
 
 service Chat{
-    rpc Connect(ChatUser) returns (ChatUserConnected);
-    rpc Disconnect(ChatUser) returns (ChatUserConnected);
+    rpc Connect(ChatUser) returns (ChatRoomInfo);
+    rpc Disconnect(ChatUser) returns (ChatRoomInfo);
     rpc SendMessage(Message) returns (Empty);
     rpc SubscribeMessages(ChatUser) returns (stream Message);
 }
@@ -22,9 +22,10 @@ message Message{
 
 message Empty {}
 
-message ChatUserConnected{
+message ChatRoomInfo{
     bool isConnected = 1;
     string conversationID = 2;
+    int32 userLimit = 3;
 }
 
 message ChatUser{
