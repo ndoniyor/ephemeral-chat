@@ -16,7 +16,8 @@ message TimeStamp{
 message Message{
     string senderID = 1;
     string message = 2;
-    TimeStamp timestamp = 3;
+    string conversationID = 3;
+    TimeStamp timestamp = 4;
 }
 
 message Empty {}
