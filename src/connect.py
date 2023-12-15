@@ -14,7 +14,6 @@ def setup_cli(client):
         client.send_message()
             
 if __name__ == "__main__":
-    logging.basicConfig()
     username = "Client" + str(randint(0, 100))
     c = Client(username)
     if not c.connect_to_server():
