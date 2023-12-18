@@ -8,11 +8,16 @@ from client.client import Client
 ADDRESS = "localhost"
 PORT = 11912
 
+
 def setup_cli(client):
-    Thread(target=client.receive_messages).start()
+    message_queue_thread = Thread(target=client.receive_messages)
+    message_queue_thread.start()
     while True:
-        client.send_message()
-            
+        response = client.send_message()
+        if response == False:
+            break
+
+
 if __name__ == "__main__":
     username = "Client" + str(randint(0, 100))
     c = Client(username)
