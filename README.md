@@ -15,7 +15,9 @@ This is a simple chat server implemented in Python using gRPC. Functionality wil
 ## To-Do
 
 - [x] Allow for multiple connections and keep them all separate
-- [ ] Add option to set user limit for chat rooms
+- [x] Have subscriptions run until disconnected
+- [x] Remove group chats
+- [x] Remove auto-assign to open rooms
 - [ ] Figure out storage for conversations (keep them non-persistent)
 - [ ] Serve gRPC server via Django
 - [ ] Add encryption to protect messages as they're transported
