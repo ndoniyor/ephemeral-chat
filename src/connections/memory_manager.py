@@ -7,7 +7,6 @@ from server.proto.chat_pb2 import ChatUser
 
 
 class MemoryConnectionManager(ConnectionManager):
-    # TODO: Directly add connection to available connections list
     def __init__(self):
         self.connections = {}
         self.available_connections = []
@@ -22,17 +21,9 @@ class MemoryConnectionManager(ConnectionManager):
 
         return new_connection
 
-    def get_or_create_available_connection_id(self, user: ChatUser) -> str | None:
+    def get_or_create_available_connection_id(self, user: ChatUser) -> str:
+        logging.info(f"Looking to match User {user.username}")
         if len(self.available_connections) > 0:
-            """
-            So issue right now is I can either add conversations with O(1) with append,
-            and then remove with pop(0) which is O(n)
-
-            Or I can add conversations with O(n) with insert(0)
-            and then remove with pop(-1) which is O(1)
-
-            Could also look into queues
-            """
             connection = self.available_connections[-1]
             connection.add_user(user)
             if connection.is_full:
@@ -41,16 +32,15 @@ class MemoryConnectionManager(ConnectionManager):
                 ] = self.available_connections.pop()
             return connection.conversation_id
         try:
+            logging.info("No available connections, creating new one")
             new_connection = self._create_connection(user)
+            new_connection.activate()
             return new_connection.conversation_id
 
         except TooManyUsersError:
             return None
 
-    def get_connection_by_conversation_id(
-        self, conversation_id: str
-    ) -> Connection:
-        logging.info(f"Looking for conversation: {conversation_id}")
+    def get_connection_by_conversation_id(self, conversation_id: str) -> str:
         try:
             return self.connections[conversation_id]
         except KeyError:
