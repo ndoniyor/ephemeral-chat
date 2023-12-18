@@ -1,4 +1,3 @@
-import logging
 import grpc
 
 from server.proto.chat_pb2 import Empty, Message, ChatUser
@@ -20,36 +19,44 @@ class Client(rpc.ChatStub):
             f"{address}:{port}", options=(("grpc.enable_http_proxy", 0),)
         )
         self.stub = rpc.ChatStub(channel)
+        self.is_connected = False
 
     def send_message(self) -> Empty | bool:
-        try:
-            text_message = input(f"S[{self.user.username}]: ")
-            message = Message()
-            message.senderID = self.user.username
-            message.message = text_message
-            message.conversationID = self.user.conversationID
-            self.stub.SendMessage(message)
-        except KeyboardInterrupt:
-            return self.disconnect_from_server()
+        text_message = input(f"S[{self.user.username}]: ")
+        if text_message == "/exit":
+            if not self.disconnect_from_server():
+                self.is_connected = False
+                return False
+        message = Message()
+        message.senderID = self.user.username
+        message.message = text_message
+        message.conversationID = self.user.conversationID
+        self.stub.SendMessage(message)
 
     def receive_messages(self):
-        response = self.subscribe_messages()
-        for res in response:
-            print(
-                f"\nR[{res.senderID}]: {res.message}\nS[{self.user.username}]: ", end=""
-            )
+        while self.is_connected == True:
+            response = self.stub.SubscribeMessages(self.user)
+
+            for res in response:
+                if res.message == "kill connection" and res.senderID == "Server":
+                    status = self.disconnect_from_server()
+                    if not status:
+                        self.is_connected = False
+                        return
+                print(
+                    f"\nR[{res.senderID}]: {res.message}\nS[{self.user.username}]: ",
+                    end="",
+                )
 
     def connect_to_server(self):
-        logging.info("Connecting to server...")
         response = self.stub.Connect(self.user)
         if response.isConnected:
-            logging.info(f"Connected to conversation {response.conversationID}")
             self.user.conversationID = response.conversationID
+            self.is_connected = True
         return response.isConnected
 
     def disconnect_from_server(self):
         response = self.stub.Disconnect(self.user)
-        return response
-
-    def subscribe_messages(self):
-        return self.stub.SubscribeMessages(self.user)
+        if response.isConnected == False:
+            self.connected = False
+        return response.isConnected

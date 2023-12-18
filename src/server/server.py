@@ -1,4 +1,5 @@
 import logging
+from typing import Iterator
 
 import server.proto.chat_pb2 as chat
 from server.proto.chat_pb2 import (
@@ -13,29 +14,43 @@ from errors.errors import (
 )
 from connections.memory_manager import MemoryConnectionManager
 
-CHAT_LIMIT_DEFAULT = 3
+CHAT_LIMIT_DEFAULT = 2
 
 
 class Server(ChatServicer):
     def __init__(self):
         self.connections = MemoryConnectionManager()
 
+    def _construct_kill_message(self, conversation_id: str) -> Message:
+        message = Message()
+        message.senderID = "Server"
+        message.message = "kill connection"
+        message.conversationID = conversation_id
+        return message
+
     def Connect(self, request: ChatUser, context) -> ChatRoomInfo:
         user = request
-        id = self.connections.get_or_create_available_connection_id(user)
-        status = id is not None
+        conversation_id = self.connections.get_or_create_available_connection_id(user)
+        status = conversation_id is not None
+        if status:
+            logging.info(
+                f"User {user.username} has successfully connected to {conversation_id}"
+            )
         return ChatRoomInfo(
-            isConnected=status, conversationID=id, userLimit=CHAT_LIMIT_DEFAULT
+            isConnected=status,
+            conversationID=conversation_id,
+            userLimit=CHAT_LIMIT_DEFAULT,
         )
 
     def Disconnect(self, request: ChatUser, context) -> ChatRoomInfo:
         user_id = request.username
         conversation_id = request.conversationID
         connection = self.connections.get_connection_by_conversation_id(conversation_id)
-        status = connection.remove_user(request)
-        if status:
-            logging.info(f"User {user_id} has successfully disconnected")
-        return ChatRoomInfo(isConnected=not status)
+        # returns true if user was removed
+        connection.deactivate()
+        logging.info(f"User {user_id} has successfully disconnected")
+        connection.is_active = False
+        return ChatRoomInfo(isConnected=False)
 
     def SendMessage(self, request: Message, context) -> Empty:
         logging.info(f"User {request.senderID} has sent a message: {request.message}")
@@ -48,15 +63,17 @@ class Server(ChatServicer):
             logging.error(f"Could not find conversation {request.conversationID}")
         return Empty()
 
-    def SubscribeMessages(self, request: ChatUser, context):
+    def SubscribeMessages(self, request: ChatUser, context) -> Iterator[Message]:
         client_id = request.username
         conversation_id = request.conversationID
         last_seen_message_index = 0
 
-        logging.info(f"User {client_id} has subscribed to messages")
         connection = self.connections.get_connection_by_conversation_id(conversation_id)
-        # TODO make this run until connection closed
-        while True:
+        logging.info(f"User {client_id} has subscribed to messages")
+
+        if not connection.is_active:
+            yield self._construct_kill_message(conversation_id)
+        while connection.is_active:
             while len(connection.chats) > last_seen_message_index:
                 message = connection.chats[last_seen_message_index]
                 last_seen_message_index += 1
