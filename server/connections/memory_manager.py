@@ -2,8 +2,8 @@ import logging
 from uuid import uuid4
 from connections.connection_manager import ConnectionManager
 from errors.errors import ConversationNotFoundError, TooManyUsersError
-from server.connection import Connection
-from server.proto.chat_pb2 import ChatUser
+from servicer.connection import Connection
+from servicer.proto.chat_pb2 import ChatUser
 
 
 class MemoryConnectionManager(ConnectionManager):

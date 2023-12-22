@@ -2,7 +2,7 @@ import logging
 from random import randint
 from threading import Thread
 
-from server.user import User
+from servicer.user import User
 from client.client import Client
 
 ADDRESS = "localhost"

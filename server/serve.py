@@ -2,8 +2,8 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 import grpc
 
-from server.proto import chat_pb2_grpc as rpc
-from server.server import Server
+from servicer.proto import chat_pb2_grpc as rpc
+from server.servicer import Server
 
 ADDRESS = "localhost"
 PORT = 11912
