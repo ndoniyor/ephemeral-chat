@@ -3,7 +3,7 @@ from random import randint
 from threading import Thread
 
 from servicer.user import User
-from client.client import Client
+from test_client.client import Client
 
 ADDRESS = "localhost"
 PORT = 11912
