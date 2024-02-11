@@ -2,7 +2,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 import grpc
 
-from servicer.proto import chat_pb2_grpc as rpc
+import servicer.chat_pb2_grpc as rpc
 from servicer.server import Server
 
 ADDRESS = "localhost"
@@ -17,7 +17,7 @@ def serve():
     server.add_insecure_port(f"[::]:{PORT}")
     server.start()
 
-    logging.info("Listening")
+    logging.info(f"Listening on {ADDRESS}:{PORT}...")
 
     server.wait_for_termination()
 

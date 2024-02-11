@@ -1,6 +1,6 @@
 from errors.errors import TooManyUsersError
-import servicer.proto.chat_pb2 as chat
-import servicer.proto.chat_pb2_grpc as rpc
+import servicer.chat_pb2 as chat
+import servicer.chat_pb2_grpc as rpc
 
 CHAT_LIMIT_DEFAULT = 2
 

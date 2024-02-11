@@ -1,7 +1,7 @@
 import grpc
 
-from servicer.proto.chat_pb2 import Empty, Message, ChatUser
-import servicer.proto.chat_pb2_grpc as rpc
+from servicer.protos.chat_pb2 import Empty, Message, ChatUser
+import servicer.protos.chat_pb2_grpc as rpc
 
 
 class Client(rpc.ChatStub):
