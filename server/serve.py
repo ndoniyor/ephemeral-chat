@@ -2,7 +2,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 import grpc
 
-import servicer.chat_pb2_grpc as rpc
+import servicer.protos.chat_pb2_grpc as rpc
 from servicer.server import Server
 
 ADDRESS = "localhost"
