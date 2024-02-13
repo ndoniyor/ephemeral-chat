@@ -1,3 +1,3 @@
 pwd
-realpath ../protos/chat.proto
-/opt/homebrew/anaconda3/envs/ephem-chat/bin/python -m grpc_tools.protoc -I ../ --python_out=./servicer/protos --grpc_python_out=./servicer/protos ../protos/chat.proto
+realpath ../../protos/chat.proto
+../virtualenv/bin/python3 -m grpc_tools.protoc -I ../../ --python_out=../servicer --grpc_python_out=../servicer ../../protos/chat.proto
