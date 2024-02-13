@@ -1,14 +1,14 @@
 import logging
 from typing import Iterator
 
-import servicer.chat_pb2 as chat
-from servicer.chat_pb2 import (
+import servicer.protos.chat_pb2 as chat
+from servicer.protos.chat_pb2 import (
     ChatUser,
     ChatRoomInfo,
     Empty,
     Message,
 )
-from servicer.chat_pb2_grpc import ChatServicer
+from servicer.protos.chat_pb2_grpc import ChatServicer
 from errors.errors import (
     ConversationNotFoundError,
 )

@@ -3,9 +3,6 @@ __pycache__
 #misc
 tests
 
-# Generated proto files
-*pb2*.py
-*pb*.js
 
 # Logs
 logs
