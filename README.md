@@ -1,16 +1,18 @@
 # Ephemeral Chat
 
-This is a simple chat server implemented in Python using gRPC. Functionality will be extended periodically. My end goal for this is a service that:
+This is a gRPC chat service using the following stack:
 
-- Allows users to talk to each other
-- Encrypted via TLS
-- Conversations can be cached for a limited time or completely ephemeral--deleting after both users disconnect
+* Python gRPC server
+* Svelte/TS frontend
+* Redis cache (WIP)
 
 ## Features
 
-- Connect and disconnect users
-- Send and receive messages in real-time
-- Supports multiple separate conversations
+* Connect and disconnect users
+* Send and receive messages in real-time
+* Supports multiple separate conversations
+* Allows users to talk to each other
+* Conversations can be cached for a limited time or completely ephemeral--deleting after both users disconnect
 
 ## To-Do
 
@@ -18,15 +20,10 @@ This is a simple chat server implemented in Python using gRPC. Functionality wil
 - [x] Have subscriptions run until disconnected
 - [x] Remove group chats
 - [x] Remove auto-assign to open rooms
+- [x] Route web requests through Envoy proxy
+- [ ] Flesh out front-end gRPC client; add logging + error handling
+- [ ] Set up frontend UI
 - [ ] Figure out storage for conversations (keep them non-persistent)
-- [ ] Serve gRPC server via Django
-- [ ] Add encryption to protect messages as they're transported
-
-## Dependencies
-
-- Python 3.7+
-- gRPC
-- ProtoBuf
 
 ## Usage
 
@@ -66,10 +63,10 @@ This is a simple chat server implemented in Python using gRPC. Functionality wil
 
 The server provides the following gRPC methods:
 
-- `Connect(ChatUser) -> ChatUserConnected`: Connect a user to the chat server.
-- `Disconnect(ChatUser) -> ChatUserConnected`: Disconnect a user from the chat server.
-- `SendMessage(Message) -> Empty`: Sends a message to the server
-- `SubscribeMessages(ChatUser) -> stream Message`: Subscribe a user to receive messages.
+* `Connect(ChatUser) -> ChatUserConnected`: Connect a user to the chat server.
+* `Disconnect(ChatUser) -> ChatUserConnected`: Disconnect a user from the chat server.
+* `SendMessage(Message) -> Empty`: Sends a message to the server
+* `SubscribeMessages(ChatUser) -> stream Message`: Subscribe a user to receive messages.
 
 ## Contributing
 
