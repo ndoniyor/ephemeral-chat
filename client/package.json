@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "NODE_ENV=development vite",
     "build": "vite build",
     "preview": "vite preview",
     "proto": "npx protoc --experimental_allow_proto3_optional --ts_out . --proto_path  . ./chat.proto",
@@ -22,6 +22,7 @@
   "dependencies": {
     "@protobuf-ts/grpcweb-transport": "^2.9.3",
     "@protobuf-ts/plugin": "^2.9.3",
+    "dotenv": "^16.4.4",
     "fetch": "^1.1.0"
   }
 }
