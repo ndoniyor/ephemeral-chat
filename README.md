@@ -24,6 +24,7 @@ This is a gRPC chat service using the following stack:
 - [ ] Flesh out front-end gRPC client; add logging + error handling
 - [ ] Set up frontend UI
 - [ ] Figure out storage for conversations (keep them non-persistent)
+- [ ] Add basic auth to server requests
 
 ## Usage
 
