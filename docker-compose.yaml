@@ -1,0 +1,13 @@
+version: '3'
+services:
+  envoy_proxy:
+    image: envoy_proxy:latest
+    ports:
+      - "8080:8080"
+      - "9901:9901"
+    volumes:
+      - ./proxy/envoy.yaml:/etc/envoy/envoy.yaml
+  ephemeralchat_server:
+    image: ephemeralchat_server:latest
+    ports:
+      - "11912:11912"
