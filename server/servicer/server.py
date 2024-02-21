@@ -79,3 +79,8 @@ class Server(ChatServicer):
                 last_seen_message_index += 1
                 if message.senderID != client_id:
                     yield message
+
+    def FlushServer(self, request: Empty, context) -> Empty:
+        logging.info("Flushing server")
+        self.connections.flush()
+        return Empty()

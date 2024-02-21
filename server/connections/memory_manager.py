@@ -27,9 +27,9 @@ class MemoryConnectionManager(ConnectionManager):
             connection = self.available_connections[-1]
             connection.add_user(user)
             if connection.is_full:
-                self.connections[
-                    connection.conversation_id
-                ] = self.available_connections.pop()
+                self.connections[connection.conversation_id] = (
+                    self.available_connections.pop()
+                )
             return connection.conversation_id
         try:
             logging.info("No available connections, creating new one")
@@ -45,3 +45,8 @@ class MemoryConnectionManager(ConnectionManager):
             return self.connections[conversation_id]
         except KeyError:
             raise ConversationNotFoundError
+
+    def flush(self):
+        self.connections = {}
+        self.available_connections = []
+        logging.info("Memory flushed")

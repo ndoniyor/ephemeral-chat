@@ -7,6 +7,7 @@ service Chat{
     rpc Disconnect(ChatUser) returns (ChatRoomInfo);
     rpc SendMessage(Message) returns (Empty);
     rpc SubscribeMessages(ChatUser) returns (stream Message);
+    rpc FlushServer(Empty) returns (Empty);
 }
 
 message TimeStamp{
