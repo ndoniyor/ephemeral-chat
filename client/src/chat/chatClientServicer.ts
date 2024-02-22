@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
-
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 
-import { ChatClient } from "./chat.client";
-import { ChatRoomInfo, ChatUser, Empty, Message } from "./chat";
+import { ChatClient } from "./protos/chat.client";
+import { ChatRoomInfo, ChatUser, Empty, Message } from "./protos/chat";
 
 
 class ChatClientServicer {
@@ -24,7 +22,8 @@ class ChatClientServicer {
 		this.messageHistory = [];
 	}
 
-	setUser(user: ChatUser) {
+	setUser(username: string) {
+		const user = ChatUser.create({ username });
 		this.user = user;
 	}
 
@@ -45,10 +44,10 @@ class ChatClientServicer {
 
 		if (response.isConnected) {
 			this.setConnected(true, response.conversationID);
-			return true;
+			return [true, response.conversationID];
 		} else {
             this.setConnected(false);
-			return false;
+			return [false, response.conversationID];
 		}
 	}
 
@@ -63,15 +62,10 @@ class ChatClientServicer {
 		console.log(response);
 	}
 
-	async receiveMessages() {
+	receiveMessages() {
         console.log('Subscribing to messages...');
-        
-		let stream = this.stub.subscribeMessages(this.user);
-        console.log('Subscribed');
-		for await (let message of stream.responses) {
-			this.messageHistory.push(message);
-		
-		}
+		const call  = this.stub.subscribeMessages(this.user);
+		return call.responses;
 	}
 
 	async disconnect() {
@@ -84,6 +78,13 @@ class ChatClientServicer {
 		} else {
 			return false;
 		}
+	}
+
+	async flushServer() {
+		const call = this.stub.flushServer(Empty.create());
+		const response = await call.response;
+		const status = await call.status;
+		console.log(response);
 	}
 }
 
