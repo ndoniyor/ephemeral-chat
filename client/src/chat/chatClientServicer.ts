@@ -58,8 +58,8 @@ class ChatClientServicer {
 			conversationID: this.user.conversationID,
 		});
 		const call = this.stub.sendMessage(message);
-		const response =  await call.response;
-		console.log(response);
+		const status =  await call.status;
+		return status.code === "OK";
 	}
 
 	receiveMessages() {
