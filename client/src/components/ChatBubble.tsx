@@ -1,20 +1,22 @@
 import { ChatUser, Message } from "../chat/protos/chat";
 
-function ChatBubble({ user, message }: { key: Number, user: ChatUser; message: Message }) {
+function ChatBubble({
+	user,
+	message,
+}: {
+	key: Number;
+	user: ChatUser;
+	message: Message;
+}) {
 	return user.username === message.senderID ? (
-		<div className="flex items-center justify-end text-right bac ">
-            <div className="flex-col">
-                <p>{message.senderID}: </p>
-                <p>{message.message}</p>
-            </div>
+		<div className="chat chat-end">
+            <div className="chat-header">{message.senderID}</div>
+			<div className="chat-bubble">{message.message}</div>
 		</div>
 	) : (
-		<div className="flex items-center justify-start text-left">
-            <div className="flex-col">
-                <p>{message.senderID}: </p>
-                <p>{message.message}</p>
-            </div>
-			
+		<div className="chat chat-start">
+            <div className="chat-header">{message.senderID}</div>
+			<div className="chat-bubble chat-bubble-accent">{message.message}</div>
 		</div>
 	);
 }

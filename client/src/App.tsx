@@ -38,6 +38,7 @@ function App() {
 				message: messageToSend,
 			});
 			setMessages((prevMessages) => [...prevMessages, message]);
+			setMessageToSend("");
 		}
 	};
 
@@ -47,28 +48,34 @@ function App() {
 
 	return (
 		<div className="flex-col justify-center">
-			<button onClick={handleFlush}>Flush</button>
+			<button className="btn-neutral" onClick={handleFlush}>
+				Flush
+			</button>
 			<div>
 				{connectionStatus ? (
-					<div>
+					<div className="card p-5 mb-5 bg-success">
 						<h2>You are connected to: {conversationID}</h2>
-						<h3>Username: {username}</h3>
 					</div>
 				) : (
+					<div className="card p-5 mb-5 bg-warning">
 					<h2>You are not connected</h2>
+					</div>
 				)}
 			</div>
 			<div>
 				{!connectionStatus ? (
-					<div>
-						<label htmlFor="username-field">Name:</label>
+					<div className="flex">
 						<input
 							id="username-field"
+							placeholder="Enter username"
+							className="input input-bordered w-full"
 							onChange={(e) => {
 								setUsername(e.target.value);
 							}}
 						/>
-						<button onClick={handleConnect}>Enter</button>
+						<button className="btn btn-accent ml-5" onClick={handleConnect}>
+							Enter
+						</button>
 					</div>
 				) : (
 					<div>
@@ -76,14 +83,22 @@ function App() {
 							user={chatClient.user}
 							messageList={messageHistory}
 						/>
-						<label htmlFor="message-field">[{username}]: </label>
-						<input
-							id="message-field"
-							onChange={(e) => {
-								setMessageToSend(e.target.value);
-							}}
-						/>
-						<button onClick={handleSendMessage}>Send</button>
+						<div className="flex py-5">
+							<input
+								id="message-field"
+								className="input input-bordered w-full"
+								onChange={(e) => {
+									setMessageToSend(e.target.value);
+								}}
+								value={messageToSend}
+							/>
+							<button
+								className="btn btn-accent ml-5"
+								onClick={handleSendMessage}
+							>
+								Send
+							</button>
+						</div>
 					</div>
 				)}
 			</div>
