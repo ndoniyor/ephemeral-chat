@@ -31,7 +31,11 @@ function App() {
   };
 
   const handleSendMessage = async () => {
-    await chatClient.sendMessage(messageToSend);
+    const success = await chatClient.sendMessage(messageToSend);
+    if(success){
+      const message = Message.create({senderID: username, message: messageToSend});
+      setMessages((prevMessages) => [...prevMessages, message]);
+    }
   };
 
   const handleFlush = async () => {
