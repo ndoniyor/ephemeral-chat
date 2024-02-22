@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import ChatClientServicer from "./chat/chatClientServicer";
-import { Message } from "./chat/chat";
+import { Message } from "./chat/protos/chat";
 
+// need to move this to inside app after local storage serialization is set up
+// then deserialize and reconstruct with useeffect
 const chatClient = new ChatClientServicer();
 
 function App() {
@@ -13,30 +15,32 @@ function App() {
   const [messageHistory, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    let isSubscribed = true;
-
-    const receiveMessages
-  }, []);
+    if (connectionStatus) {
+      let chatStream = chatClient.receiveMessages();
+      chatStream.onMessage((message) => {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      });
+    }
+  }, [connectionStatus, chatClient]);
 
   const handleConnect = async () => {
     chatClient.setUser(username);
     const [status, id] = await chatClient.connect();
     setConnectionStatus(status as boolean);
     setConversationID(id as string);
-
-    for await (let message of chatClient.receiveMessages()){
-      setMessages(prevMessages => [...prevMessages, message]);
-    }
   };
 
   const handleSendMessage = async () => {
     await chatClient.sendMessage(messageToSend);
-  }
+  };
 
-
+  const handleFlush = async () => {
+    await chatClient.flushServer();
+  };
 
   return (
     <>
+      <button onClick={handleFlush}>Flush</button>
       <div>
         {connectionStatus ? (
           <div>
