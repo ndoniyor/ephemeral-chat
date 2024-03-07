@@ -20,10 +20,12 @@ This is a gRPC chat service using the following stack:
 - [x] Remove group chats
 - [x] Remove auto-assign to open rooms
 - [x] Route web requests through Envoy proxy
+- [ ] Change server gRPC channel to be secure; only allow Envoy to connect
 - [ ] Flesh out front-end gRPC client; add logging + error handling
-- [ ] Set up frontend UI
-- [ ] Figure out storage for conversations (keep them non-persistent)
-- [ ] Add basic auth to server requests (?)
+- [ ] Local storage
+- [ ] Handle timeouts
+- [ ] Relieve server threads when conversation is gone
+- [ ] Debug disconnects
 
 ## Usage
 
