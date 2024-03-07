@@ -18,7 +18,7 @@ python_proto:
 build_server:
 	docker build -t $(SERVER_IMAGE) ./server
 
-run_backend:
+start_backend:
 	docker-compose up -d
 
 stop_backend:
@@ -29,5 +29,5 @@ help:
 	@echo "  flush_server   - Flush the server's conversations"
 	@echo "  python_proto   - Generate Python code from the proto file"
 	@echo "  build_server   - Build the server Docker image"
-	@echo "  run_backend    - Run the backend Docker containers"
+	@echo "  start_backend    - Run the backend Docker containers"
 	@echo "  stop_backend   - Stop the backend Docker containers"
