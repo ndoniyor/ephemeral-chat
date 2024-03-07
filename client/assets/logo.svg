@@ -1,0 +1,21 @@
+<svg data-v-0dd9719b="" version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 340.000000 250.000000" preserveAspectRatio="xMidYMid meet" color-interpolation-filters="sRGB" style="margin: auto;">
+  <g data-v-0dd9719b="" fill="#333" class="icon-text-wrapper icon-svg-group iconsvg" transform="translate(80.53500366210938,79.63819122314453)">
+    <g class="iconsvg-imagesvg" transform="translate(59.46499443054199,0)">
+      <g>
+        <rect fill="#333" fill-opacity="0" stroke-width="2" x="0" y="0" width="60" height="59.083613159890106" class="image-rect"></rect>
+        <svg x="0" y="0" width="60" height="59.083613159890106" filtersec="colorsb857661746" class="image-svg-svg primary" style="overflow: visible;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.0000014452295999944909 101.5572280883789 100.00597381591797">
+            <title>资源 329</title>
+            <g fill-rule="evenodd">
+              <path d="M48.8 0h2.05c14 0 25.79 4.92 35.77 14.73s14.93 21.45 14.93 35.41a47.18 47.18 0 0 1-14.91 35.25A49.27 49.27 0 0 1 50.85 100H15.79a61.92 61.92 0 0 0 47.49-60.2A61.62 61.62 0 0 0 48.8 0z" fill="#333"></path>
+              <path d="M0 81.49V50.14c0-14 5-25.63 15-35.4a55.06 55.06 0 0 1 8-6.5A54.91 54.91 0 0 1 28.84 33 55.09 55.09 0 0 1 0 81.49z" fill="#fd6727"></path>
+              <path d="M0 94.89v-5.81A61.9 61.9 0 0 0 35.62 33a61.7 61.7 0 0 0-6.78-28.15A48.14 48.14 0 0 1 40.48 1a54.93 54.93 0 0 1 16 38.83A55.11 55.11 0 0 1 1.39 94.91z" fill="#fd6727"></path>
+            </g>
+          </svg>
+        </svg>
+        <!---->
+      </g>
+    </g>
+  </g>
+  <defs v-gra="od"></defs>
+</svg>
