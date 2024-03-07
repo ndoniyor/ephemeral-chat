@@ -1,7 +1,14 @@
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
+import type { RpcOutputStream } from "@protobuf-ts/runtime-rpc";
 
 import { ChatClient } from "./protos/chat.client";
-import { ChatRoomInfo, ChatUser, Empty, Message } from "./protos/chat";
+import { ChatUser, Empty, Message } from "./protos/chat";
+
+interface ConnectionResponse {
+	status: boolean;
+	conversationID: string;
+	stream: RpcOutputStream<Message> | null;
+}
 
 
 class ChatClientServicer {
@@ -9,6 +16,7 @@ class ChatClientServicer {
 	stub: ChatClient;
 	isConnected: boolean;
 	messageHistory: Array<Message>;
+	id: number
 
 	constructor() {
 		const host = import.meta.env.VITE_DEV_HOST_URL
@@ -20,6 +28,8 @@ class ChatClientServicer {
 		this.stub = new ChatClient(transport);
 		this.isConnected = false;
 		this.messageHistory = [];
+		this.id = Math.random();
+		console.log('id', this.id)
 	}
 
 	setUser(username: string) {
@@ -34,20 +44,19 @@ class ChatClientServicer {
         }
 	}
 
-	async connect() {
+	async connect(): Promise<ConnectionResponse> {
 		const call = this.stub.connect(this.user);
 
 		const response = await call.response;
 		console.log("got response message: ", response)
-		
-		const status = await call.status;
 
 		if (response.isConnected) {
 			this.setConnected(true, response.conversationID);
-			return [true, response.conversationID];
+			const stream = this.receiveMessages();
+			return { status: true, conversationID: response.conversationID, stream };
 		} else {
             this.setConnected(false);
-			return [false, response.conversationID];
+			return { status: false, conversationID: "", stream: null };
 		}
 	}
 
@@ -71,7 +80,6 @@ class ChatClientServicer {
 	async disconnect() {
 		const call = this.stub.disconnect(this.user);
 		const response = await call.response;
-		const status = await call.status;
 		if (!response.isConnected) {
 			this.setConnected(false);
 			return true;
@@ -83,7 +91,6 @@ class ChatClientServicer {
 	async flushServer() {
 		const call = this.stub.flushServer(Empty.create());
 		const response = await call.response;
-		const status = await call.status;
 		console.log(response);
 	}
 }
