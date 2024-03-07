@@ -1,6 +1,6 @@
 import { useState } from "react";
-import ChatClientServicer from "./chat/chatClientServicer";
-import { Message } from "./chat/protos/chat";
+import ChatServiceClientHandler from "./chatServiceClient/chatServiceClientHandler";
+import { Message } from "./chatServiceClient/generatedProtos/chat_service";
 import MessageBox from "./components/MessageBox";
 import UserCreationForm from "./components/UserCreationForm";
 import { ChatClientProvider } from "./context/ChatClientContext";
@@ -9,7 +9,7 @@ import SendMessageBox from "./components/SendMessageBox";
 
 // need to move this to inside app after local storage serialization is set up
 // then deserialize and reconstruct with useeffect
-const chatClient = new ChatClientServicer();
+const chatClient = new ChatServiceClientHandler();
 
 function App() {
 	const [connectionStatus, setConnectionStatus] = useState(false);
@@ -40,7 +40,7 @@ function App() {
 							setMessages={setMessages}
 						/>
 					) : (
-						<div>
+						<div>	
 							<MessageBox
 								user={chatClient.user}
 								messageList={messageHistory}

@@ -1,14 +1,25 @@
-import ChatClientServicer from "../chat/chatClientServicer";
-import React from "react";
+import ChatServiceClientHandler from "../chatServiceClient/chatServiceClientHandler";
+import { createContext, useState, ReactNode, useContext } from "react";
 
-const ChatClientContext = React.createContext<ChatClientServicer>(new ChatClientServicer());
+const ChatClientContext = createContext<ChatServiceClientHandler>(
+	new ChatServiceClientHandler()
+);
 
-export const ChatClientProvider = ({ children, client }: { children: React.ReactNode, client: ChatClientServicer }) => {
-    const [chatClient] = React.useState(client);
-    return <ChatClientContext.Provider value={chatClient}>{children}</ChatClientContext.Provider>;
+export const ChatClientProvider = ({
+	children,
+	client,
+}: {
+	children: ReactNode;
+	client: ChatServiceClientHandler;
+}) => {
+	const [chatClient] = useState(client);
+	return (
+		<ChatClientContext.Provider value={chatClient}>
+			{children}
+		</ChatClientContext.Provider>
+	);
 };
 
-
 export const useChatClient = () => {
-    return React.useContext(ChatClientContext);
-}
+	return useContext(ChatClientContext);
+};

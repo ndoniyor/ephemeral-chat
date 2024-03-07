@@ -1,8 +1,9 @@
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import type { RpcOutputStream } from "@protobuf-ts/runtime-rpc";
 
-import { ChatClient } from "./protos/chat.client";
-import { ChatUser, Empty, Message } from "./protos/chat";
+import { ChatServiceClient } from './generatedProtos/chat_service.client';
+
+import { ChatUser, Empty, Message } from "./generatedProtos/chat_service";
 
 interface ConnectionResponse {
 	status: boolean;
@@ -11,12 +12,11 @@ interface ConnectionResponse {
 }
 
 
-class ChatClientServicer {
+class ChatServiceClientHandler {
 	user: ChatUser;
-	stub: ChatClient;
+	stub: ChatServiceClient;
 	isConnected: boolean;
 	messageHistory: Array<Message>;
-	id: number
 
 	constructor() {
 		const host = import.meta.env.VITE_DEV_HOST_URL
@@ -25,11 +25,9 @@ class ChatClientServicer {
 		});
 
 		this.user = ChatUser.create();
-		this.stub = new ChatClient(transport);
+		this.stub = new ChatServiceClient(transport);
 		this.isConnected = false;
 		this.messageHistory = [];
-		this.id = Math.random();
-		console.log('id', this.id)
 	}
 
 	setUser(username: string) {
@@ -95,4 +93,4 @@ class ChatClientServicer {
 	}
 }
 
-export default ChatClientServicer;
+export default ChatServiceClientHandler;

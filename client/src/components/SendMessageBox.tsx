@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useChatClient } from "../context/ChatClientContext";
-import { Message } from "../chat/protos/chat";
+import { Message } from "../chatServiceClient/generatedProtos/chat";
 
 function SendMessageBox({setMessages}: {setMessages: Function}) {
 

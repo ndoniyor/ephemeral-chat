@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useChatClient } from "../context/ChatClientContext";
-import { Message } from "../chat/protos/chat";
+import { Message } from "../chatServiceClient/generatedProtos/chat_service";
 
 function UserCreationForm({ setConnectionStatus, setConversationID, setMessages }: { setConnectionStatus: Function, setConversationID: Function, setMessages: Function}) {
 	
@@ -9,7 +9,6 @@ function UserCreationForm({ setConnectionStatus, setConversationID, setMessages 
 	const client = useChatClient()
 
 	const handleConnect = async () => {
-		console.log(client.id)
 		client.setUser(username);
 		const {status, conversationID, stream} = await client.connect()
 		if(stream){
