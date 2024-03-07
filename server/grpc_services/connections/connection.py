@@ -1,6 +1,6 @@
 from errors.errors import TooManyUsersError
-import servicer.protos.chat_pb2 as chat
-import servicer.protos.chat_pb2_grpc as rpc
+
+import grpc_services.generated_protos.chat_service_pb2 as chat_service_types
 
 CHAT_LIMIT_DEFAULT = 2
 
@@ -23,7 +23,7 @@ class Connection:
     def deactivate(self):
         self.is_active = False
 
-    def add_user(self, user: chat.ChatUser):
+    def add_user(self, user: chat_service_types.ChatUser):
         if len(self.users) < self.user_limit:
             self.users.append(user)
         else:
@@ -33,7 +33,7 @@ class Connection:
         self.chats.append(chat)
 
     # TODO: go over this
-    def disconnect_user(self, user: chat.ChatUser) -> bool:
+    def disconnect_user(self, user: chat_service_types.ChatUser) -> bool:
         for existing_user in self.users:
             if existing_user.username == user.username:
                 self.users.remove(existing_user)

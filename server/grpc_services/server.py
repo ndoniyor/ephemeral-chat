@@ -1,34 +1,34 @@
 import logging
 from typing import Iterator
 
-import servicer.protos.chat_pb2 as chat
-from servicer.protos.chat_pb2 import (
-    ChatUser,
-    ChatRoomInfo,
-    Empty,
-    Message,
-)
-from servicer.protos.chat_pb2_grpc import ChatServicer
+import grpc_services.generated_protos.chat_service_pb2 as chat_service_types
+import grpc_services.generated_protos.chat_service_pb2_grpc as chat_service_grpc
+
 from errors.errors import (
     ConversationNotFoundError,
 )
+
 from connections.memory_manager import MemoryConnectionManager
 
 CHAT_LIMIT_DEFAULT = 2
 
 
-class Server(ChatServicer):
+class Server(chat_service_grpc.ChatServicer):
     def __init__(self):
         self.connections = MemoryConnectionManager()
 
-    def _construct_kill_message(self, conversation_id: str) -> Message:
-        message = Message()
+    def _construct_kill_message(
+        self, conversation_id: str
+    ) -> chat_service_types.Message:
+        message = chat_service_types.Message()
         message.senderID = "Server"
         message.message = "kill connection"
         message.conversationID = conversation_id
         return message
 
-    def Connect(self, request: ChatUser, context) -> ChatRoomInfo:
+    def Connect(
+        self, request: chat_service_types.ChatUser, context
+    ) -> chat_service_types.ChatRoomInfo:
         user = request
         conversation_id = self.connections.get_or_create_available_connection_id(user)
         status = conversation_id is not None
@@ -36,13 +36,15 @@ class Server(ChatServicer):
             logging.info(
                 f"User {user.username} has successfully connected to {conversation_id}"
             )
-        return ChatRoomInfo(
+        return chat_service_types.ChatRoomInfo(
             isConnected=status,
             conversationID=conversation_id,
             userLimit=CHAT_LIMIT_DEFAULT,
         )
 
-    def Disconnect(self, request: ChatUser, context) -> ChatRoomInfo:
+    def Disconnect(
+        self, request: chat_service_types.ChatUser, context
+    ) -> chat_service_types.ChatRoomInfo:
         user_id = request.username
         conversation_id = request.conversationID
         connection = self.connections.get_connection_by_conversation_id(conversation_id)
@@ -50,9 +52,11 @@ class Server(ChatServicer):
         connection.deactivate()
         logging.info(f"User {user_id} has successfully disconnected")
         connection.is_active = False
-        return ChatRoomInfo(isConnected=False)
+        return chat_service_types.ChatRoomInfo(isConnected=False)
 
-    def SendMessage(self, request: Message, context) -> Empty:
+    def SendMessage(
+        self, request: chat_service_types.Message, context
+    ) -> chat_service_types.Empty:
         logging.info(f"User {request.senderID} has sent a message: {request.message}")
         try:
             connection = self.connections.get_connection_by_conversation_id(
@@ -61,9 +65,11 @@ class Server(ChatServicer):
             connection.add_to_chat(request)
         except ConversationNotFoundError:
             logging.error(f"Could not find conversation {request.conversationID}")
-        return Empty()
+        return chat_service_types.Empty()
 
-    def SubscribeMessages(self, request: ChatUser, context) -> Iterator[Message]:
+    def SubscribeMessages(
+        self, request: chat_service_types.ChatUser, context
+    ) -> Iterator[chat_service_types.Message]:
         client_id = request.username
         conversation_id = request.conversationID
         last_seen_message_index = 0
@@ -80,7 +86,9 @@ class Server(ChatServicer):
                 if message.senderID != client_id:
                     yield message
 
-    def FlushServer(self, request: Empty, context) -> Empty:
+    def FlushServer(
+        self, request: chat_service_types.Empty, context
+    ) -> chat_service_types.Empty:
         logging.info("Flushing server")
         self.connections.flush()
-        return Empty()
+        return chat_service_types.Empty()

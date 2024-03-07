@@ -1,10 +1,10 @@
 import grpc
 
-from servicer.protos.chat_pb2 import Empty, Message, ChatUser
-import servicer.protos.chat_pb2_grpc as rpc
+import grpc_services.generated_protos.chat_service_pb2 as chat_service_types
+import grpc_services.generated_protos.chat_service_pb2_grpc as chat_service_grpc
 
 
-class Client(rpc.ChatStub):
+class Client(chat_service_grpc.ChatStub):
     def __init__(
         self,
         username: str,
@@ -12,22 +12,22 @@ class Client(rpc.ChatStub):
         address: str = "localhost",
         port: int = 11912,
     ):
-        self.user = ChatUser()
+        self.user = chat_service_types.ChatUser()
         self.user.username = username
         self.user.conversationID = conversation_id
         channel = grpc.insecure_channel(
             f"{address}:{port}", options=(("grpc.enable_http_proxy", 0),)
         )
-        self.stub = rpc.ChatStub(channel)
+        self.stub = chat_service_grpc.ChatStub(channel)
         self.is_connected = False
 
-    def send_message(self) -> Empty | bool:
+    def send_message(self) -> chat_service_types.Empty | bool:
         text_message = input(f"S[{self.user.username}]: ")
         if text_message == "/exit":
             if not self.disconnect_from_server():
                 self.is_connected = False
                 return False
-        message = Message()
+        message = chat_service_types.Message()
         message.senderID = self.user.username
         message.message = text_message
         message.conversationID = self.user.conversationID

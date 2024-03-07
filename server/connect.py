@@ -2,7 +2,7 @@ import logging
 from random import randint
 from threading import Thread
 
-from servicer.user import User
+from server.grpc_services.user import User
 from test_client.client import Client
 
 ADDRESS = "localhost"

@@ -1,9 +1,12 @@
 import logging
 from uuid import uuid4
+
+import server.grpc_services.generated_protos.chat_service_pb2 as chat_service_types
+
 from connections.connection_manager import ConnectionManager
 from errors.errors import ConversationNotFoundError, TooManyUsersError
-from servicer.connection import Connection
-from servicer.protos.chat_pb2 import ChatUser
+from server.grpc_services.connections.connection import Connection
+
 
 
 class MemoryConnectionManager(ConnectionManager):
@@ -11,7 +14,7 @@ class MemoryConnectionManager(ConnectionManager):
         self.connections = {}
         self.available_connections = []
 
-    def _create_connection(self, user: ChatUser) -> Connection:
+    def _create_connection(self, user: chat_service_types.ChatUser) -> Connection:
         id = str(uuid4())
         new_connection = Connection(conversation_id=id)
         new_connection.add_user(user)
@@ -21,7 +24,7 @@ class MemoryConnectionManager(ConnectionManager):
 
         return new_connection
 
-    def get_or_create_available_connection_id(self, user: ChatUser) -> str:
+    def get_or_create_available_connection_id(self, user: chat_service_types.ChatUser) -> str:
         logging.info(f"Looking to match User {user.username}")
         if len(self.available_connections) > 0:
             connection = self.available_connections[-1]
