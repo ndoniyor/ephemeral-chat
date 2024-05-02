@@ -4,6 +4,7 @@ This is a gRPC chat service using the following stack:
 
 * Python gRPC server
 * React/TS frontend
+    * DaisyUI Components
 
 ## Features
 
