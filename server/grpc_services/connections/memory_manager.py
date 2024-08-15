@@ -1,11 +1,11 @@
 import logging
 from uuid import uuid4
 
-import server.grpc_services.generated_protos.chat_service_pb2 as chat_service_types
+import grpc_services.generated_protos.chat_service_pb2 as chat_service_types
 
-from connections.connection_manager import ConnectionManager
+from grpc_services.connections.connection_manager import ConnectionManager
 from errors.errors import ConversationNotFoundError, TooManyUsersError
-from server.grpc_services.connections.connection import Connection
+from grpc_services.connections.connection import Connection
 
 
 

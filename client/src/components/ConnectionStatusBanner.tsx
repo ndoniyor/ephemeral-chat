@@ -1,7 +1,9 @@
 function ConnectionStatusBanner({
-	connectionStatus, conversationID
+	connectionStatus,
+	conversationID,
 }: {
-	connectionStatus: boolean, conversationID: string
+	connectionStatus: boolean;
+	conversationID: string;
 }) {
 	return (
 		<div>

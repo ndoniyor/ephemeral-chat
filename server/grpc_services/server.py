@@ -4,16 +4,13 @@ from typing import Iterator
 import grpc_services.generated_protos.chat_service_pb2 as chat_service_types
 import grpc_services.generated_protos.chat_service_pb2_grpc as chat_service_grpc
 
-from errors.errors import (
-    ConversationNotFoundError,
-)
+from errors.errors import ConversationNotFoundError
 
-from connections.memory_manager import MemoryConnectionManager
+from grpc_services.connections.memory_manager import MemoryConnectionManager
 
 CHAT_LIMIT_DEFAULT = 2
 
-
-class Server(chat_service_grpc.ChatServicer):
+class Server(chat_service_grpc.ChatServiceServicer):
     def __init__(self):
         self.connections = MemoryConnectionManager()
 

@@ -1,5 +1,4 @@
-import { ChatUser, Message } from "../chatServiceClient/generatedProtos/chat";
-
+import { ChatUser, Message } from "../chatServiceClient/generatedProtos/chat_service";
 function ChatBubble({
 	user,
 	message,

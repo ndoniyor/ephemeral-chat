@@ -1,4 +1,3 @@
-
 class TooManyUsersError(Exception):
     pass
 

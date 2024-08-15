@@ -13,7 +13,7 @@ def serve():
     logging.basicConfig(level=logging.INFO)
 
     server = grpc.server(ThreadPoolExecutor(max_workers=10))
-    chat_service_grpc.add_ChatServicer_to_server(Server(), server)
+    chat_service_grpc.add_ChatServiceServicer_to_server(Server(), server)
     server.add_insecure_port(f"[::]:{PORT}")
     server.start()
 
