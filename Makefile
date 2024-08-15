@@ -13,8 +13,7 @@ flush_server:
 	--data 'AAAAAAA='
 
 python_proto:
-	./server/virtualenv/bin/python3 -m grpc_tools.protoc -I ./ --python_out=./server/grpc_services --grpc_python_out=./server/grpc_services ./protos/chat_service.proto
-
+	./server/virtualenv/bin/python3 -m grpc_tools.protoc -I ./protos --python_out=./server/grpc_services/generated_protos --grpc_python_out=./server/grpc_services/generated_protos chat_service.proto
 build_server:
 	docker build -t $(SERVER_IMAGE) ./server
 

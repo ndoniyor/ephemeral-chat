@@ -24,7 +24,7 @@ This is a gRPC chat service using the following stack:
 - [ ] Change server gRPC channel to be secure; only allow Envoy to connect
 - [ ] Flesh out front-end gRPC client; add logging + error handling
 - [ ] Local storage
-- [ ] Handle timeouts
+- [x] Handle timeouts
 - [ ] Relieve server threads when conversation is gone
 - [ ] Debug disconnects
 
