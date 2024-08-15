@@ -6,6 +6,7 @@ import UserCreationForm from "./components/UserCreationForm";
 import { ChatClientProvider } from "./context/ChatClientContext";
 import ConnectionStatusBanner from "./components/ConnectionStatusBanner";
 import SendMessageBox from "./components/SendMessageBox";
+import NavBar from "./components/NavBar";
 
 // need to move this to inside app after local storage serialization is set up
 // then deserialize and reconstruct with useeffect
@@ -22,7 +23,8 @@ function App() {
 
 	return (
 		<ChatClientProvider client={chatClient}>
-			<div className="flex-col justify-center">
+			<NavBar/>
+            <div className="flex flex-col justify-center items-center h-screen">
 				<button className="btn-neutral" onClick={handleFlush}>
 					Flush
 				</button>
